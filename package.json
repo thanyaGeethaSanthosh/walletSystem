@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "nyc mocha 'test/**/*.js'"
   },
   "keywords": [],
   "author": "",
@@ -13,5 +13,10 @@
   "dependencies": {
     "express": "^4.19.2",
     "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "mocha": "^10.4.0",
+    "nyc": "^15.1.0",
+    "supertest": "^6.3.4"
   }
 }
