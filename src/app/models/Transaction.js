@@ -5,10 +5,10 @@ const TransactionSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  transactionId: {
+  walletId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: 'Transaction'
+    ref: 'Wallet'
   },
   amount: {
     type: Number,

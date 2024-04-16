@@ -1,3 +1,6 @@
+const Wallet = require('../models/Wallet')
+const Transaction = require('../models/Transaction')
+
 const getWallet = async (id) => {
   return {
     id,
@@ -8,12 +11,25 @@ const getWallet = async (id) => {
 }
 
 const setupWallet = async (name, balance) => {
-  return {
-    id: '123abc',
-    balance,
-    transactionId: '4349349843',
+  const wallet = new Wallet({
     name,
-    date: 'date'
+    balance
+  })
+  const walletEntry = await wallet.save()
+  const transaction = new Transaction({
+    description: 'Created wallet',
+    walletId: walletEntry._id,
+    amount: walletEntry.balance,
+    balance: walletEntry.balance,
+    type: 'CREDIT'
+  })
+  const transactionEntry = await transaction.save()
+  return {
+    id: walletEntry._id,
+    balance: walletEntry.balance,
+    transactionId: transactionEntry._id,
+    name: walletEntry.name,
+    date: walletEntry.date
   }
 }
 
