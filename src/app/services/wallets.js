@@ -1,6 +1,6 @@
 const getWallet = async (id) => {
   return {
-    id: id,
+    id,
     balance: 3000,
     name: 'My wallet',
     date: 'date'
@@ -10,9 +10,9 @@ const getWallet = async (id) => {
 const setupWallet = async (name, balance) => {
   return {
     id: '123abc',
-    balance: balance,
+    balance,
     transactionId: '4349349843',
-    name: name,
+    name,
     date: 'date'
   }
 }
@@ -52,7 +52,7 @@ const getTransactions = async (walletId, skip, limit) => {
       description: 'Loaned',
       date: 'date',
       type: 'CREDIT'
-    },
+    }
   ]
 }
 

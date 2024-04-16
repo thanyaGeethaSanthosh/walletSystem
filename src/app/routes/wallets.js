@@ -1,5 +1,5 @@
-const express = require('express');
-const walletController = require("../controllers/wallets");
+const express = require('express')
+const walletController = require('../controllers/wallets')
 
 const router = express.Router()
 
