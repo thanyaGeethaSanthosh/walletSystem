@@ -1,12 +1,20 @@
 const Wallet = require('../models/Wallet')
 const Transaction = require('../models/Transaction')
+const { ResourceNotFoundError } = require('../utility/error')
+const logger = require('../utility/logger')
 
 const getWallet = async (id) => {
-  return {
-    id,
-    balance: 3000,
-    name: 'My wallet',
-    date: 'date'
+  try {
+    const wallet = await Wallet.findById(id)
+    return {
+      id: wallet._id,
+      balance: wallet.balance,
+      name: wallet.name,
+      date: wallet.date
+    }
+  } catch (error) {
+    logger.info(error instanceof Error)
+    throw new ResourceNotFoundError('Wallet id provided is invalid please provide a valid wallet Id')
   }
 }
 
@@ -34,42 +42,39 @@ const setupWallet = async (name, balance) => {
 }
 
 const transact = async (walletId, amount, description) => {
+  const roundedAmount = Number(amount.toFixed(4))
+  const walletEntry = await Wallet.findOneAndUpdate(
+    { _id: walletId },
+    { $inc: { balance: roundedAmount } },
+    { new: true }
+  )
+  const transaction = new Transaction({
+    description,
+    walletId,
+    amount: roundedAmount,
+    balance: walletEntry.balance,
+    type: amount > 0 ? 'CREDIT' : 'DEBIT' // TODO: need to decide what to do when it is 0, should we ignore or throw error
+  })
+  const transactionEntry = await transaction.save()
   return {
-    balance: 2000,
-    transactionId: '8328832323'
+    id: transactionEntry._id,
+    walletId: walletEntry._id,
+    amount: transaction.amount,
+    balance: walletEntry.balance,
+    description: transaction.description,
+    date: transaction.date,
+    type: transaction.type
   }
 }
 
 const getTransactions = async (walletId, skip, limit) => {
-  return [
-    {
-      id: '333ccc',
-      walletId: '123abc',
-      amount: -250,
-      balance: 2250,
-      description: 'Film tickets',
-      date: 'date',
-      type: 'DEBIT'
-    },
-    {
-      id: '444ccc',
-      walletId: '123abc',
-      amount: -20,
-      balance: 2230,
-      description: 'Tea',
-      date: 'date',
-      type: 'DEBIT'
-    },
-    {
-      id: '555ccc',
-      walletId: '123abc',
-      amount: 5000,
-      balance: 7230,
-      description: 'Loaned',
-      date: 'date',
-      type: 'CREDIT'
-    }
-  ]
+  const transactions = await Transaction.find({ walletId }).skip(skip)
+    .limit(limit)
+
+  const transactionsResponse = transactions.map(({ _id, description, walletId, amount, balance, type, date }) => {
+    return { id: _id, description, walletId, amount, balance, type, date }
+  })
+  return transactionsResponse
 }
 
 module.exports = {
