@@ -1,9 +1,9 @@
 
-import React,{ useState } from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import COLORS from '../values/colors';
 import TitleText from './TitleText';
-import FetchAPI from '../handlers/FetchAPI';
 
 const textBoxStyle = `
 &::-webkit-input-placeholder,
@@ -23,7 +23,7 @@ const textBoxStyle = `
 &:hover::-moz-placeholder,
 &:hover::placeholder,
 &:hover::-ms-input-placeholder {
-  color: ${COLORS.light1};
+  color: ${COLORS.dark2};
 }
 &:hover:focus::-webkit-input-placeholder,
 &:hover:focus::-moz-placeholder,
@@ -52,8 +52,8 @@ transition: all 0.3s ease-in-out;
 -moz-transition: all 0.3s ease-in-out;
 -ms-transition: all 0.3s ease-in-out;
 &:hover {
-  background: ${COLORS.light2};
-  color: ${COLORS.light1};
+  background: ${COLORS.light1};
+  color: ${COLORS.dark2};
 }
 `
 const StyledInput = styled.input`
@@ -69,11 +69,12 @@ padding: 0;
 margin: -5px 0px 0px 0px;
 font-family: 'Lato', sans-serif;
 font-size: 0.875em;
-color: ${COLORS.light2};
+color: ${COLORS.dark2};
 outline: none;
 cursor: pointer;
 border: solid 1px ${COLORS.light2};
 &:hover {
+  background: ${COLORS.dark2};
   color: ${COLORS.light1};
 }
 `;
@@ -86,37 +87,61 @@ margin: 50px auto 100px auto;
 
 const StyledFormBody = styled.div`
 font-family: 'Lato', sans-serif;
-background: ${COLORS.light1};
-color: ${COLORS.light2};
+color: ${COLORS.dark2};
+`
+const ErrorMessage = styled.div`
+font-family: 'Lato', sans-serif;
+font-size: 1em;
+width: 470px;
+height: 50px;
+padding: 0px 15px 0px 15px;
+outline: none;
+color: ${COLORS.RED};
 `
 
+
 function WalletCreationForm(props) {
-  // const {fetchAPI}=props
-  console.log(FetchAPI);
+  const { FetchAPI } = props
+  const [errorMessage, setErrorMessage] = useState("")
   const [formData, setFormData] = useState({
     username: "",
     walletName: "",
-    balance:""
+    balance: 0
   });
-  const handleChange = (event) => {
-    setFormData(prev => ({ ...prev, [event.target.id]: event.target.value }));
-    console.log("formData",formData);
+  const navigate = useNavigate();
+
+  const goToTransactions = () => {
+    navigate('/transactions')
   };
 
-  // const handleSubmit = () => {
-  //   // no "submit event" param needed above ^
-  //   // sendInputValueToApi(value).then(() => /* Do something */)
-  // };
+  const handleChange = (event) => {
+    setFormData(prev => ({ ...prev, [event.target.id]: event.target.value }));
+  };
+
+  const createWallet = () => {
+    if (!formData.username || !formData.walletName) {
+      setErrorMessage("userName and walletName are required to create a wallet")
+      setTimeout(() => {
+        setErrorMessage("")
+      }, 5000);
+      return;
+    }
+
+    // no "submit event" param needed above ^
+    // sendInputValueToApi(value).then(() => /* Do something */)
+  };
 
 
   return (
     <StyledFormBody>
-      <TitleText title="Wallet System"/>
+      <TitleText title="Wallet System" />
       <StyledForm>
         <StyledInput id="username" onChange={handleChange} type="text" placeholder="USERNAME" />
-        <StyledInput id="walletname" onChange={handleChange} type="text" placeholder="WALLET NAME" />
+        <StyledInput id="walletName" onChange={handleChange} type="text" placeholder="WALLET NAME" />
         <StyledInput id="balance" onChange={handleChange} type="text" placeholder="INITIAL BALANCE" />
-        <SubmitButton id="submit" type="submit" value="GO!" />
+        <SubmitButton id="submit" type="button" value="Create Wallet" onClick={createWallet} />
+        <SubmitButton id="transactionlink" type="button" value="Go to Transactions" onClick={goToTransactions} />
+        <ErrorMessage>{errorMessage}</ErrorMessage>
       </StyledForm>
     </StyledFormBody>
   )
