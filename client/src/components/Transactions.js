@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import TitleText from './TitleText';
+import Spinner from './Spinner';
 import COLORS from '../values/colors';
 
 const Container = styled.div`
@@ -75,7 +76,7 @@ const Transactions = (props) => {
 
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Spinner />;
   }
   else if (error) {
     return <div>Error: {error.message}</div>;
