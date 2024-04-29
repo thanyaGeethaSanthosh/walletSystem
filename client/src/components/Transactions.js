@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import TitleText from './TitleText';
-import FetchAPI from '../handlers/FetchAPI';
 import COLORS from '../values/colors';
-import { PATH } from '../values/constants';
 
 const Container = styled.div`
   position: absolute;
@@ -54,10 +52,9 @@ const TbodyTr = styled.tr`
 `;
 
 const Transactions = (props) => {
-  const { walletId } = props
+  const { walletId, FetchAPI } = props
   const skip = 0
   const limit = 2
-  console.log(FetchAPI);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [transactionData, setTransactionData] = useState(null);
@@ -65,11 +62,9 @@ const Transactions = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`/${PATH}/transactions?walletId=${walletId}&skip=${skip}&limit=${limit}`);
-        const result = await response.json();
+        const result = await FetchAPI.getTransactions(walletId, skip, limit)
         setTransactionData(result);
       } catch (error) {
-        // Handle errors
         setError(error);
       } finally {
         setLoading(false);

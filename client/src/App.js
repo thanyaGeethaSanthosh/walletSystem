@@ -8,7 +8,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/transactions" element={<Transactions walletId={"661ec5e0b0317693c5e3f5cb"} />} />
+        <Route path="/transactions" element={<Transactions walletId={"661ec5e0b0317693c5e3f5cb"} FetchAPI={FetchAPI} />} />
         <Route path="/" element={<WalletCreationForm/>} />
       </Routes>
     </BrowserRouter>

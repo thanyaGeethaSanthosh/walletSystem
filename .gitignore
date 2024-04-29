@@ -130,7 +130,7 @@ dist
 .pnp.*
 
 # react app files
-client/build/*
+build/*
 client/node_modules
 client/.pnp
 client/.pnp.js

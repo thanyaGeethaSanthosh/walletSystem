@@ -1,4 +1,4 @@
-import { HOSTNAME, PATH, PROTOCOL } from '../values/constants';
+import { PATH } from '../values/constants';
 
 const postReq = (url, data) => {
   return fetch(`${url}`, {
@@ -12,11 +12,12 @@ const Register = (data) => {
   return postReq('api/signUp', data);
 };
 
-const getTransactions =(walletId, skip, limit) => {
-  return fetch(`${PROTOCOL}${HOSTNAME}/${PATH}/transactions?walletId=${walletId}&skip=${skip}&limit=${limit}`).then((res) => res.json());
+const getTransactions = async (walletId, skip, limit) => {
+  const response = await fetch(`/${PATH}/transactions?walletId=${walletId}&skip=${skip}&limit=${limit}`);
+  return response.json();
 };
 
-const FetchAPI={
+const FetchAPI = {
   Register,
   getTransactions,
 };
