@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
+    "build": "cd client && npm install && npm run build",
     "test": "nyc mocha 'test/**/*.js'"
   },
   "keywords": [],

@@ -1,7 +1,7 @@
 const request = require('supertest')
 const sinon = require('sinon')
 const app = require('../../src/app')
-const walletService = require('./../../src/app/services/wallets')
+const walletService = require('../../src/app/services/wallets')
 
 describe('/api/wallets', () => {
   let mockGetWallet, mockCreateWallet, mockAddTransaction, mockGetTransactions
