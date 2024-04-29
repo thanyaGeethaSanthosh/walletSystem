@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import COLORS from '../values/colors';
 import TitleText from './TitleText';
+import Spinner from './Spinner';
 
 const textBoxStyle = `
 &::-webkit-input-placeholder,
@@ -96,13 +97,16 @@ width: 470px;
 height: 50px;
 padding: 0px 15px 0px 15px;
 outline: none;
-color: ${COLORS.RED};
+color: ${COLORS.red};
 `
 
 
 function WalletCreationForm(props) {
   const { FetchAPI } = props
   const [errorMessage, setErrorMessage] = useState("")
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [response, setResponse] = useState(null);
   const [formData, setFormData] = useState({
     username: "",
     walletName: "",
@@ -126,12 +130,27 @@ function WalletCreationForm(props) {
       }, 5000);
       return;
     }
-
-    // no "submit event" param needed above ^
-    // sendInputValueToApi(value).then(() => /* Do something */)
+    setLoading(true)
+    const fetchData = async () => {
+      try {
+        const result = await FetchAPI.CreateWallet(formData)
+        setResponse(result);
+      } catch (error) {
+        setError(error);
+      } finally {
+        localStorage.setItem('walletId', response.id)
+        setLoading(false);
+      }
+    };
+    fetchData();
   };
 
-
+  if (loading) {
+    return <Spinner />;
+  }
+  else if (error) {
+    return <div>Error: {error.message}</div>;
+  }
   return (
     <StyledFormBody>
       <TitleText title="Wallet System" />

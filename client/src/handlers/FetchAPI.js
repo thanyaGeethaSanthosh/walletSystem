@@ -8,8 +8,14 @@ const postReq = (url, data) => {
   });
 };
 
-const Register = (data) => {
-  return postReq('api/signUp', data);
+const CreateWallet = async ({walletName, balance}) => {
+  const response = await postReq(`/${PATH}/setup`, {name:walletName, balance});
+  return response.json();
+};
+
+const getWallet = async (walletId) => {
+  const response = await fetch(`/${PATH}/wallet/${walletId}`);
+  return response.json();
 };
 
 const getTransactions = async (walletId, skip, limit) => {
@@ -18,7 +24,8 @@ const getTransactions = async (walletId, skip, limit) => {
 };
 
 const FetchAPI = {
-  Register,
+  CreateWallet,
+  getWallet,
   getTransactions,
 };
 
