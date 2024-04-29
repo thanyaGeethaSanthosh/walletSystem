@@ -127,7 +127,7 @@ const Transactions = (props) => {
 }
 
 Transactions.propTypes = {
-  fetchAPI: PropTypes.object.isRequired,
+  FetchAPI: PropTypes.object.isRequired,
   walletId: PropTypes.string.isRequired
 };
 
