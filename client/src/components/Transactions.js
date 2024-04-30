@@ -4,7 +4,9 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import TitleText from './TitleText';
 import Spinner from './Spinner';
+import PageSectionBar from './PageSectionBar';
 import COLORS from '../values/colors';
+import { MAX_PAGE_SIZE } from '../values/constants';
 
 const Container = styled.div`
   position: absolute;
@@ -84,9 +86,8 @@ text-align: center;
 
 const Transactions = (props) => {
   const { walletId, FetchAPI } = props
-  const skip = 0
-  const limit = 2 //TODO: add pagination
   const [loading, setLoading] = useState(true);
+  const [pageNo, setPageNo] = useState(1);
   const [error, setError] = useState(null);
   const [transactionData, setTransactionData] = useState(null);
   const navigate = useNavigate();
@@ -94,7 +95,7 @@ const Transactions = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await FetchAPI.getTransactions(walletId, skip, limit)
+        const result = await FetchAPI.getTransactions(walletId, (pageNo - 1) * MAX_PAGE_SIZE, MAX_PAGE_SIZE)
         setTransactionData(result);
       } catch (error) {
         setError(error);
@@ -103,7 +104,7 @@ const Transactions = (props) => {
       }
     };
     fetchData();
-  }, [FetchAPI, walletId]);
+  }, [FetchAPI, walletId, pageNo]);
 
 
   if (loading) {
@@ -120,6 +121,7 @@ const Transactions = (props) => {
   return (
     <Container>
       <TitleText title="Transactions" />
+      <PageSectionBar setPageNo={setPageNo} pageNo={pageNo} />
       <Table>
         <thead>
           <tr>
