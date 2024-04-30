@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import TitleText from './TitleText';
@@ -52,13 +53,43 @@ const TbodyTr = styled.tr`
   }
 `;
 
+const LinkButton = styled.input`
+font-family: 'Lato', sans-serif;
+font-size: 1em;
+width: 470px;
+height: 50px;
+padding: 0px 15px 0px 15px;
+
+background: transparent;
+outline: none;
+color: #726659;
+
+border: solid 1px ${COLORS.light2};
+border-bottom: none;
+width: 502px;
+padding: 0;
+margin: -5px 0px 0px 0px;
+font-family: 'Lato', sans-serif;
+font-size: 0.875em;
+color: ${COLORS.dark2};
+outline: none;
+cursor: pointer;
+border: solid 1px ${COLORS.light2};
+text-align: center;
+&:hover {
+  background: ${COLORS.dark2};
+  color: ${COLORS.light1};
+}
+`;
+
 const Transactions = (props) => {
   const { walletId, FetchAPI } = props
   const skip = 0
-  const limit = 2
+  const limit = 2 //TODO: add pagination
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [transactionData, setTransactionData] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,7 +103,7 @@ const Transactions = (props) => {
       }
     };
     fetchData();
-  }, []);
+  }, [FetchAPI, walletId]);
 
 
   if (loading) {
@@ -81,6 +112,10 @@ const Transactions = (props) => {
   else if (error) {
     return <div>Error: {error.message}</div>;
   }
+
+  const goToWalletDetails = () => {
+    navigate('/')
+  };
 
   return (
     <Container>
@@ -122,6 +157,7 @@ const Transactions = (props) => {
           })}
         </tbody>
       </Table>
+      <LinkButton value="Go to Wallet Details" onClick={goToWalletDetails} />
     </Container>
   );
 }

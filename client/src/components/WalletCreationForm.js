@@ -1,10 +1,11 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import COLORS from '../values/colors';
 import TitleText from './TitleText';
 import Spinner from './Spinner';
+import WalletDetails from './WalletDetails';
 
 const textBoxStyle = `
 &::-webkit-input-placeholder,
@@ -106,7 +107,7 @@ function WalletCreationForm(props) {
   const [errorMessage, setErrorMessage] = useState("")
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [response, setResponse] = useState(null);
+  const [createdWalletId, setCreatedWalletId] = useState(null);
   const [formData, setFormData] = useState({
     username: "",
     walletName: "",
@@ -122,7 +123,18 @@ function WalletCreationForm(props) {
     setFormData(prev => ({ ...prev, [event.target.id]: event.target.value }));
   };
 
-  const createWallet = () => {
+  useEffect(() => {
+    if (createdWalletId) {
+      localStorage.setItem('walletId', createdWalletId);
+    }
+    const walletIdInLocalStorage = localStorage.getItem('walletId');
+    if (walletIdInLocalStorage) {
+      setCreatedWalletId(walletIdInLocalStorage)
+    }
+  }, [createdWalletId]);
+
+
+  const create = () => {
     if (!formData.username || !formData.walletName) {
       setErrorMessage("userName and walletName are required to create a wallet")
       setTimeout(() => {
@@ -133,12 +145,13 @@ function WalletCreationForm(props) {
     setLoading(true)
     const fetchData = async () => {
       try {
-        const result = await FetchAPI.CreateWallet(formData)
-        setResponse(result);
+        const result = await FetchAPI.callCreateWallet(formData)
+        if (result?.id) {
+          setCreatedWalletId(result.id);
+        }
       } catch (error) {
         setError(error);
       } finally {
-        localStorage.setItem('walletId', response.id)
         setLoading(false);
       }
     };
@@ -151,6 +164,9 @@ function WalletCreationForm(props) {
   else if (error) {
     return <div>Error: {error.message}</div>;
   }
+  if (createdWalletId) {
+    return (<WalletDetails walletId={createdWalletId} FetchAPI={FetchAPI} />)
+  }
   return (
     <StyledFormBody>
       <TitleText title="Wallet System" />
@@ -158,7 +174,7 @@ function WalletCreationForm(props) {
         <StyledInput id="username" onChange={handleChange} type="text" placeholder="USERNAME" />
         <StyledInput id="walletName" onChange={handleChange} type="text" placeholder="WALLET NAME" />
         <StyledInput id="balance" onChange={handleChange} type="text" placeholder="INITIAL BALANCE" />
-        <SubmitButton id="submit" type="button" value="Create Wallet" onClick={createWallet} />
+        <SubmitButton id="submit" type="button" value="Create Wallet" onClick={create} />
         <SubmitButton id="transactionlink" type="button" value="Go to Transactions" onClick={goToTransactions} />
         <ErrorMessage>{errorMessage}</ErrorMessage>
       </StyledForm>

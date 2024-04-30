@@ -8,8 +8,8 @@ const postReq = (url, data) => {
   });
 };
 
-const CreateWallet = async ({walletName, balance}) => {
-  const response = await postReq(`/${PATH}/setup`, {name:walletName, balance});
+const callCreateWallet = async ({ walletName, balance }) => {
+  const response = await postReq(`/${PATH}/setup`, { name: walletName, balance });//TODO: add username too
   return response.json();
 };
 
@@ -24,7 +24,7 @@ const getTransactions = async (walletId, skip, limit) => {
 };
 
 const FetchAPI = {
-  CreateWallet,
+  callCreateWallet,
   getWallet,
   getTransactions,
 };
