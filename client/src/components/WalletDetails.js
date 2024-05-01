@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import TitleText from './TitleText';
 import Spinner from './Spinner';
-import PopUpWindow from './PopUpWindow';
+import TransactionCreationPopup from './TransactionCreationPopup';
 import LinkButton from './LinkButton';
 import CommonButton from './CommonButton';
 
@@ -67,7 +67,7 @@ function WalletDetails(props) {
             }
         };
         fetchData();
-    }, [FetchAPI, walletId]);
+    }, [FetchAPI, walletId, isPopUpVisible]);
 
     if (loading) {
         return <Spinner />;
@@ -102,7 +102,7 @@ function WalletDetails(props) {
                 </Table>
                 <CommonButton id={"createtransaction"} onClickFunction={() => setIsPopUpVisible(true)} text={"Add a Transaction"} />
             </Container>
-            {isPopUpVisible ? (<PopUpWindow setIsPopUpVisible={setIsPopUpVisible} />) : ""}
+            {isPopUpVisible ? (<TransactionCreationPopup FetchAPI={FetchAPI} setLoading={setLoading} setError={setError} walletId={walletId} setIsPopUpVisible={setIsPopUpVisible} />) : ""}
         </>
     )
 }

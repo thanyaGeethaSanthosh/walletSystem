@@ -28,7 +28,11 @@ const transact = async (req, res) => {
   try {
     const { walletId } = req.params
     const { amount, description } = req.body
-    const wallet = await walletService.transact(walletId, amount, description)
+    const parsedAmount = parseInt(amount)
+    if (isNaN(parsedAmount)) {
+      throw new ValidationError('please provide a valid amount')
+    }
+    const wallet = await walletService.transact(walletId, parsedAmount, description)
     res.json(wallet)
   } catch (err) {
     logger.info('error in transact')
