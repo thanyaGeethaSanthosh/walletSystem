@@ -1,39 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import COLORS from '../values/colors';
 import TitleText from './TitleText';
 import Spinner from './Spinner';
-
-const LinkButton = styled.input`
-font-family: 'Lato', sans-serif;
-font-size: 1em;
-width: 470px;
-height: 50px;
-padding: 0px 15px 0px 15px;
-
-background: transparent;
-outline: none;
-color: #726659;
-
-border: solid 1px ${COLORS.light2};
-border-bottom: none;
-width: 502px;
-padding: 0;
-margin: -5px 0px 0px 0px;
-font-family: 'Lato', sans-serif;
-font-size: 0.875em;
-color: ${COLORS.dark2};
-outline: none;
-cursor: pointer;
-border: solid 1px ${COLORS.light2};
-text-align: center;
-&:hover {
-  background: ${COLORS.dark2};
-  color: ${COLORS.light1};
-}
-`;
+import PopUpWindow from './PopUpWindow';
+import LinkButton from './LinkButton';
+import CommonButton from './CommonButton';
 
 const Container = styled.div`
   position: absolute;
@@ -80,12 +52,8 @@ function WalletDetails(props) {
     const { FetchAPI, walletId } = props
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isPopUpVisible, setIsPopUpVisible] = useState(false);
     const [walletDetails, setWalletDetails] = useState("");
-    const navigate = useNavigate();
-
-    const goToTransactions = () => {
-        navigate('/transactions')
-    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -99,7 +67,7 @@ function WalletDetails(props) {
             }
         };
         fetchData();
-    }, []);
+    }, [FetchAPI, walletId]);
 
     if (loading) {
         return <Spinner />;
@@ -108,30 +76,34 @@ function WalletDetails(props) {
         return <div>Error: {error.message}</div>;
     }
     return (
-        <Container>
-            <TitleText title="WalletDetails" />
-            <Table>
-                <tbody>
-                    <TbodyTr>
-                        <Td>wallet ID</Td>
-                        <Td>{walletDetails.id}</Td>
-                    </TbodyTr>
-                    <TbodyTr>
-                        <Td>wallet Name</Td>
-                        <Td>{walletDetails.name}</Td>
-                    </TbodyTr>
-                    <TbodyTr>
-                        <Td>wallet Balance</Td>
-                        <Td>{walletDetails.balance}</Td>
-                    </TbodyTr>
-                    <TbodyTr>
-                        <Td>Date</Td>
-                        <Td>{walletDetails.date}</Td>
-                    </TbodyTr>
-                </tbody>
-            </Table>
-             <LinkButton value="Go to Transactions" onClick={goToTransactions} />
-        </Container>
+        <>
+            <LinkButton text="Go to Transactions" path="/transactions" />
+            <Container>
+                <TitleText title="WalletDetails" />
+                <Table>
+                    <tbody>
+                        <TbodyTr>
+                            <Td>wallet ID</Td>
+                            <Td>{walletDetails.id}</Td>
+                        </TbodyTr>
+                        <TbodyTr>
+                            <Td>wallet Name</Td>
+                            <Td>{walletDetails.name}</Td>
+                        </TbodyTr>
+                        <TbodyTr>
+                            <Td>wallet Balance</Td>
+                            <Td>{walletDetails.balance}</Td>
+                        </TbodyTr>
+                        <TbodyTr>
+                            <Td>Date</Td>
+                            <Td>{walletDetails.date}</Td>
+                        </TbodyTr>
+                    </tbody>
+                </Table>
+                <CommonButton id={"createtransaction"} onClickFunction={() => setIsPopUpVisible(true)} text={"Add a Transaction"} />
+            </Container>
+            {isPopUpVisible ? (<PopUpWindow setIsPopUpVisible={setIsPopUpVisible} />) : ""}
+        </>
     )
 }
 
