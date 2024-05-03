@@ -8,7 +8,7 @@ describe('/api/wallets', () => {
   const transactionId = '123'
   const walletId = '123abc'
   const getWalletData = { id: transactionId, balance: 3000, name: 'My wallet', date: 'date' }
-  const createWalletBody = { name: 'wallet name', balance: 20 }
+  const createWalletBody = { name: 'user name', balance: 20 }
   const addTransactionBody = { amount: -200, description: 'travel' }
   const getTransactionsResponse = [
     { id: '333ccc', walletId: '123abc', amount: -250, balance: 2250, description: 'Film tickets', date: 'date', type: 'DEBIT' },

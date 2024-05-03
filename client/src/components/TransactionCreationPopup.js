@@ -4,6 +4,7 @@ import COLORS from '../values/colors';
 import CommonButton from './CommonButton';
 import InputText from './InputText';
 import Spinner from './Spinner';
+import ToggleButton from './ToggleButton'
 
 const ErrorMessage = styled.div`
 font-family: 'Lato', sans-serif;
@@ -62,6 +63,7 @@ const TransactionCreationPopup = (props) => {
   const { setIsPopUpVisible, FetchAPI, setError, walletId } = props
   const [errorMessage, setErrorMessage] = useState("")
   const [amount, setAmount] = useState("");
+  const [toggle, setToggle] = useState(false);
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -76,7 +78,7 @@ const TransactionCreationPopup = (props) => {
     setLoading(true)
     const createTransaction = async () => {
       try {
-        await FetchAPI.callCreateTransaction({ walletId: walletId, amount, description })
+        await FetchAPI.callCreateTransaction({ walletId: walletId, amount: `${toggle ? "-" : ""}${amount}`, description })
         setIsPopUpVisible(false)
       } catch (error) {
         setError(error);
@@ -98,6 +100,7 @@ const TransactionCreationPopup = (props) => {
             <ErrorMessage>{errorMessage}</ErrorMessage>
             <InputText id="amount" name="AMOUNT" value={amount} setValue={setAmount} />
             <InputText id="description" name="DESCRIPTION" value={description} setValue={setDescription} />
+            <ToggleButton label1="CREDIT" label2="DEBIT" isChecked={toggle} onChange={(event) => { setToggle(prev => !prev) }} />
             <CommonButton id={"popup1"} onClickFunction={create} text={"add a transaction"} />
           </>
         )}

@@ -1,6 +1,12 @@
 const dotenv = require('dotenv')
+const path = require('path')
+const logger = require('../utility/logger')
 
-dotenv.config({ path: `${process.env.PWD}/.env` })
+try {
+  dotenv.config({ path: path.resolve(__dirname, '../.env') })
+} catch (error) {
+  logger.error('Error loading .env file:', error)
+}
 
 module.exports = {
   DB_CONNECTION_STRING: process.env.DB_CONNECTION_STRING

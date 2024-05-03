@@ -8,8 +8,8 @@ const postReq = (url, data) => {
   });
 };
 
-const callCreateWallet = async ({ walletName, balance }) => {
-  const response = await postReq(`/${PATH}/setup`, { name: walletName, balance });//TODO: add username too
+const callCreateWallet = async ({ username, balance }) => {
+  const response = await postReq(`/${PATH}/setup`, { name: username, balance });//TODO: add username too
   return response.json();
 };
 const callCreateTransaction = async ({ walletId, amount, description }) => {

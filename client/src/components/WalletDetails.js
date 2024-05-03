@@ -87,7 +87,7 @@ function WalletDetails(props) {
                             <Td>{walletDetails.id}</Td>
                         </TbodyTr>
                         <TbodyTr>
-                            <Td>wallet Name</Td>
+                            <Td>userName</Td>
                             <Td>{walletDetails.name}</Td>
                         </TbodyTr>
                         <TbodyTr>

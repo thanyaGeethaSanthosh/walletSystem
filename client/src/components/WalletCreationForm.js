@@ -34,7 +34,6 @@ function WalletCreationForm(props) {
   const [error, setError] = useState(null);
   const [createdWalletId, setCreatedWalletId] = useState(null);
   const [username, setUsername] = useState("");
-  const [walletName, setWalletName] = useState("");
   const [balance, setBalance] = useState(0);
 
   useEffect(() => {
@@ -49,8 +48,8 @@ function WalletCreationForm(props) {
 
 
   const create = () => {
-    if (!username || !walletName) {
-      setErrorMessage("userName and walletName are required to create a wallet")
+    if (!username) {
+      setErrorMessage("userName is required to create a wallet")
       setTimeout(() => {
         setErrorMessage("")
       }, 5000);
@@ -59,7 +58,7 @@ function WalletCreationForm(props) {
     setLoading(true)
     const fetchData = async () => {
       try {
-        const result = await FetchAPI.callCreateWallet({ username, walletName, balance })
+        const result = await FetchAPI.callCreateWallet({ username, balance })
         if (result?.id) {
           setCreatedWalletId(result.id);
         }
@@ -88,7 +87,6 @@ function WalletCreationForm(props) {
       <StyledFormBody>
         <TitleText title="Wallet System" />
         <InputText id="username" name="USERNAME" value={username} setValue={setUsername} />
-        <InputText id="walletName" name="WALLET NAME" value={walletName} setValue={setWalletName} />
         <InputText id="balance" name="INITIAL BALANCE" value={balance} setValue={setBalance} />
         <ErrorMessage>{errorMessage}</ErrorMessage>
         <CommonButton id={"submit"} onClickFunction={create} text={"Create Wallet"} />
