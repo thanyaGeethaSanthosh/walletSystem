@@ -24,16 +24,15 @@ const StyledButton = styled.button`
 
 const CenteredContainer = styled.div`
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: ${props => props.alignment};
     height: 100%;
 `;
 
 
 function CommonButton(props) {
-    const { id, text, onClickFunction } = props
+    const { id, text, onClickFunction, alignment = "center" } = props
     return (
-        <CenteredContainer>
+        <CenteredContainer alignment={alignment}>
             <StyledButton id={id} onClick={onClickFunction}>{text}</StyledButton>
         </CenteredContainer>
     )

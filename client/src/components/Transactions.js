@@ -7,6 +7,7 @@ import PageSectionBar from './PageSectionBar';
 import LinkButton from './LinkButton';
 import COLORS from '../values/colors';
 import { MAX_PAGE_SIZE } from '../values/constants';
+import ExportButton from './ExportButton';
 
 const Container = styled.div`
   position: absolute;
@@ -19,6 +20,7 @@ const Table = styled.table`
   width: 800px;
   border-collapse: collapse;
   overflow: hidden;
+  margin-top: 8px;
   box-shadow: 0 0 20px rgba(0,0,0,0.1);
 `;
 
@@ -90,6 +92,7 @@ const Transactions = (props) => {
       <Container>
         <TitleText title="Transactions" />
         <PageSectionBar setPageNo={setPageNo} pageNo={pageNo} />
+        <ExportButton FetchAPI={FetchAPI} walletId={walletId} />
         <Table>
           <thead>
             <tr>

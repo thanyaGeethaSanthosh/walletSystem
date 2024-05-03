@@ -27,10 +27,16 @@ const getTransactions = async (walletId, skip, limit) => {
   return response.json();
 };
 
+const getAllTransactions = async (walletId) => {
+  const response = await fetch(`/${PATH}/transactions?walletId=${walletId}`);
+  return response.json();
+};
+
 const FetchAPI = {
   callCreateWallet,
   getWallet,
   getTransactions,
+  getAllTransactions,
   callCreateTransaction
 };
 

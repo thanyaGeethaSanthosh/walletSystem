@@ -15,6 +15,8 @@ color: ${COLORS.dark2};
 position: relative;
 width: 500px;
 margin: 50px auto 100px auto;
+display: flex;
+flex-direction: column;
 `
 const ErrorMessage = styled.div`
 font-family: 'Lato', sans-serif;

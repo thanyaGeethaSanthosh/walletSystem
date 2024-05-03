@@ -68,8 +68,8 @@ const transact = async (walletId, amount, description) => {
 }
 
 const getTransactions = async (walletId, skip, limit) => {
-  const transactions = await Transaction.find({ walletId }).skip(skip)
-    .limit(limit)
+  const transactions = await Transaction.find({ walletId }).skip(skip || 0)
+    .limit(limit || 0)
 
   const transactionsResponse = transactions.map(({ _id, description, walletId, amount, balance, type, date }) => {
     return { id: _id, description, walletId, amount, balance, type, date }

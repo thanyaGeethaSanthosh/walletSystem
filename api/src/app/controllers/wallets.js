@@ -42,7 +42,7 @@ const transact = async (req, res) => {
 
 const getTransactions = async (req, res) => {
   try {
-    const { walletId, skip = 0, limit = 10 } = req.query
+    const { walletId, skip, limit } = req.query
     if (!walletId) {
       throw new ValidationError('Wallet id is required to get Transactions. Please provide a valid wallet Id')
     }
