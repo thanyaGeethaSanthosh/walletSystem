@@ -11,6 +11,10 @@ const StyledSpinner = styled.div`
   border-bottom-color: #ffffff;
   width: 50px;
   height: 50px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: transparent;
   animation: ${spin} 2s linear infinite;
 `;
 
