@@ -8,6 +8,7 @@ import LinkButton from './LinkButton';
 import COLORS from '../values/colors';
 import { MAX_PAGE_SIZE } from '../values/constants';
 import ExportButton from './ExportButton';
+import SortDropdown from './SortDropDown';
 
 const Container = styled.div`
   position: absolute;
@@ -57,17 +58,64 @@ const TbodyTr = styled.tr`
   }
 `;
 
+const Row = styled.div`
+display: flex;
+align-items: center;
+justify-content: space-between;
+`
+
 const Transactions = (props) => {
-  const { walletId, FetchAPI } = props
+  const { FetchAPI, walletId, setWalletId } = props
   const [loading, setLoading] = useState(true);
   const [pageNo, setPageNo] = useState(1);
   const [error, setError] = useState(null);
+  const [sort, setSort] = useState(null);
   const [transactionData, setTransactionData] = useState(null);
 
+
+  // useEffect(() => {
+  //   if (!walletId) {
+  //     const walletIdInLocalStorage = localStorage.getItem('walletId');
+  //     if (walletIdInLocalStorage) {
+  //       setWalletId(walletIdInLocalStorage);
+  //     }
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   console.log("walletId", walletId);
+  //   const fetchData = async () => {
+  //     try {
+  //       const result = await FetchAPI.getTransactions(walletId, (pageNo - 1) * MAX_PAGE_SIZE, MAX_PAGE_SIZE, sort)
+  //       setTransactionData(result);
+  //     } catch (error) {
+  //       setError(error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   fetchData();
+  // }, [FetchAPI, pageNo, sort, walletId]);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await FetchAPI.getTransactions(walletId, (pageNo - 1) * MAX_PAGE_SIZE, MAX_PAGE_SIZE)
+        if (!walletId) {
+          const walletIdInLocalStorage = localStorage.getItem('walletId');
+          if (walletIdInLocalStorage) {
+            // If walletId is not available but stored in localStorage, set it
+            setWalletId(walletIdInLocalStorage);
+          } else {
+            // If walletId is not available and not in localStorage, exit
+            return;
+          }
+        }
+
+        const result = await FetchAPI.getTransactions(
+          walletId,
+          (pageNo - 1) * MAX_PAGE_SIZE,
+          MAX_PAGE_SIZE,
+          sort
+        );
         setTransactionData(result);
       } catch (error) {
         setError(error);
@@ -76,8 +124,7 @@ const Transactions = (props) => {
       }
     };
     fetchData();
-  }, [FetchAPI, walletId, pageNo]);
-
+  }, [FetchAPI, pageNo, sort, walletId, setWalletId]);
 
   if (loading) {
     return <Spinner />;
@@ -92,7 +139,10 @@ const Transactions = (props) => {
       <Container>
         <TitleText title="Transactions" />
         <PageSectionBar setPageNo={setPageNo} pageNo={pageNo} />
-        <ExportButton FetchAPI={FetchAPI} walletId={walletId} />
+        <Row>
+          <ExportButton FetchAPI={FetchAPI} walletId={walletId} />
+          <SortDropdown onSelect={(optiion => setSort(optiion))} />
+        </Row>
         <Table>
           <thead>
             <tr>

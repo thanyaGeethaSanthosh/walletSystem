@@ -22,8 +22,8 @@ const getWallet = async (walletId) => {
   return response.json();
 };
 
-const getTransactions = async (walletId, skip, limit) => {
-  const response = await fetch(`/${PATH}/transactions?walletId=${walletId}&skip=${skip}&limit=${limit}`);
+const getTransactions = async (walletId, skip, limit, sort) => {
+  const response = await fetch(`/${PATH}/transactions?walletId=${walletId}&skip=${skip}&limit=${limit}${sort ? "&sort=" + sort : ""}`);
   return response.json();
 };
 

@@ -67,10 +67,20 @@ const transact = async (walletId, amount, description) => {
   }
 }
 
-const getTransactions = async (walletId, skip, limit) => {
-  const transactions = await Transaction.find({ walletId }).skip(skip || 0)
-    .limit(limit || 0)
-
+const getTransactions = async (walletId, skip, limit, sort) => {
+  const ASCENDING_VALUE = 1 // Positive numbers: Ascending order.
+  const DESCENDING_VALUE = -1 // Negative numbers: Descending order
+  const sortOptionToSortValueMapper = {
+    ascDate: { date: ASCENDING_VALUE },
+    descDate: { date: DESCENDING_VALUE },
+    ascAmount: { amount: ASCENDING_VALUE },
+    descAmount: { amount: DESCENDING_VALUE }
+  }
+  let query = Transaction.find({ walletId })
+  if (sort && Object.keys(sortOptionToSortValueMapper).includes(sort)) {
+    query = query.sort(sortOptionToSortValueMapper[sort])
+  }
+  const transactions = await query.skip(skip || 0).limit(limit || 0)
   const transactionsResponse = transactions.map(({ _id, description, walletId, amount, balance, type, date }) => {
     return { id: _id, description, walletId, amount, balance, type, date }
   })

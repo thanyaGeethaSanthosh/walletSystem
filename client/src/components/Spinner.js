@@ -1,5 +1,19 @@
-import './spinner.scss';
+import styled, { keyframes } from 'styled-components';
 
-const Spinner = () => <div className='spinner'></div>;
+const spin = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+
+const StyledSpinner = styled.div`
+  border-radius: 50%;
+  border: 8px solid #3498db;
+  border-bottom-color: #ffffff;
+  width: 50px;
+  height: 50px;
+  animation: ${spin} 2s linear infinite;
+`;
+
+const Spinner = () => <StyledSpinner />;
 
 export default Spinner;
