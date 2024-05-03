@@ -23,6 +23,11 @@ transition: all 0.3s ease-in-out;
   color: ${COLORS.dark2};
 }
 `
+const Row = styled.div`
+display: flex;
+align-items: center;
+justify-content: center;
+`
 
 function InputText(props) {
     const { value, setValue, name, id } = props
@@ -32,7 +37,9 @@ function InputText(props) {
     };
 
     return (
-        <StyledInput id={id} onChange={handleChange} type="text" placeholder={name} />
+        <Row>
+            <StyledInput id={id} onChange={handleChange} type="text" placeholder={name} />
+        </Row>
     )
 }
 
