@@ -11,13 +11,13 @@ const App = () => {
     if (walletIdInLocalStorage) {
       setWalletId(walletIdInLocalStorage)
     }
-  }, [walletId]);
+  }, []);
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/transactions" element={walletId ? <Transactions walletId={walletId} FetchAPI={FetchAPI} /> :  <Navigate to="/" replace={true} />} />
-        <Route path="/" element={<WalletCreationForm FetchAPI={FetchAPI} />} />
+        <Route path="/transactions" element={walletId ? <Transactions walletId={walletId} setWalletId={setWalletId} FetchAPI={FetchAPI} /> : <Navigate to="/" replace={true} />} />
+        <Route path="/" element={<WalletCreationForm walletId={walletId} setWalletId={setWalletId} FetchAPI={FetchAPI} />} />
       </Routes>
     </BrowserRouter>
   );
