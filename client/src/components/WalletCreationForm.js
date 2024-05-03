@@ -7,7 +7,6 @@ import Spinner from './Spinner';
 import WalletDetails from './WalletDetails';
 import InputText from './InputText';
 import CommonButton from './CommonButton';
-import LinkButton from './LinkButton';
 
 const StyledFormBody = styled.div`
 font-family: 'Lato', sans-serif;
@@ -30,23 +29,22 @@ color: ${COLORS.red};
 
 
 function WalletCreationForm(props) {
-  const { FetchAPI } = props
+  const { FetchAPI, walletId, setWalletId } = props
   const [errorMessage, setErrorMessage] = useState("")
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [createdWalletId, setCreatedWalletId] = useState(null);
   const [username, setUsername] = useState("");
   const [balance, setBalance] = useState(0);
 
   useEffect(() => {
-    if (createdWalletId) {
-      localStorage.setItem('walletId', createdWalletId);
+    if (walletId) {
+      localStorage.setItem('walletId', walletId);
     }
     const walletIdInLocalStorage = localStorage.getItem('walletId');
     if (walletIdInLocalStorage) {
-      setCreatedWalletId(walletIdInLocalStorage)
+      setWalletId(walletIdInLocalStorage)
     }
-  }, [createdWalletId]);
+  }, [setWalletId, walletId]);
 
 
   const create = () => {
@@ -62,7 +60,7 @@ function WalletCreationForm(props) {
       try {
         const result = await FetchAPI.callCreateWallet({ username, balance })
         if (result?.id) {
-          setCreatedWalletId(result.id);
+          setWalletId(result.id);
         }
       } catch (error) {
         setError(error);
@@ -79,13 +77,12 @@ function WalletCreationForm(props) {
   else if (error) {
     return <div>Error: {error.message}</div>;
   }
-  if (createdWalletId) {
-    return (<WalletDetails walletId={createdWalletId} FetchAPI={FetchAPI} />)
+  if (walletId) {
+    return (<WalletDetails walletId={walletId} FetchAPI={FetchAPI} />)
   }
 
   return (
     <>
-      <LinkButton text="Go to Transactions" path="/transactions" />
       <StyledFormBody>
         <TitleText title="Wallet System" />
         <InputText id="username" name="USERNAME" value={username} setValue={setUsername} />

@@ -68,8 +68,8 @@ const TransactionCreationPopup = (props) => {
   const [loading, setLoading] = useState(false);
 
   const create = () => {
-    if (!amount || !description) {
-      setErrorMessage("amount and description are required to create a transaction")
+    if (!amount) {
+      setErrorMessage("amount is required to create a transaction")
       setTimeout(() => {
         setErrorMessage("")
       }, 5000);
@@ -78,7 +78,7 @@ const TransactionCreationPopup = (props) => {
     setLoading(true)
     const createTransaction = async () => {
       try {
-        await FetchAPI.callCreateTransaction({ walletId: walletId, amount: `${toggle ? "-" : ""}${amount}`, description })
+        await FetchAPI.callCreateTransaction({ walletId: walletId, amount: `${toggle ? "-" : ""}${amount}`, description: description || "some transaction" })
         setIsPopUpVisible(false)
       } catch (error) {
         setError(error);
