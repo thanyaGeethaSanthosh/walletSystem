@@ -5,6 +5,12 @@ UI URL: https://wallet-system-kohl.vercel.app/
 API URL: https://wallet-system-kohl.vercel.app/api/Wallets
 Recording with explanation: https://www.loom.com/share/d9363f7ef82b4eb29b723f09c82602d4?sid=ee2b3304-8465-4b65-8c25-0f2217784859
 
+### To Run app Test
+
+```
+npm run test
+```
+
 ### Supported operations
 
 This project implements a backend service and a simple 2-page web application for a wallet system. The backend offers functionalities for:

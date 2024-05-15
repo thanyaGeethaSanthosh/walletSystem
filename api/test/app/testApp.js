@@ -7,21 +7,23 @@ describe('/api/wallets', () => {
   let mockGetWallet, mockCreateWallet, mockAddTransaction, mockGetTransactions
   const transactionId = '123'
   const walletId = '123abc'
-  const getWalletData = { id: transactionId, balance: 3000, name: 'My wallet', date: 'date' }
   const createWalletBody = { name: 'user name', balance: 20 }
+  const getWalletData = { id: walletId, date: 'date', ...createWalletBody }
   const addTransactionBody = { amount: -200, description: 'travel' }
+  const addedTransaction = { id: transactionId, walletId, amount: -200, description: 'travel' }
   const getTransactionsResponse = [
-    { id: '333ccc', walletId: '123abc', amount: -250, balance: 2250, description: 'Film tickets', date: 'date', type: 'DEBIT' },
-    { id: '444ccc', walletId: '123abc', amount: -20, balance: 2230, description: 'Tea', date: 'date', type: 'DEBIT' },
-    { id: '555ccc', walletId: '123abc', amount: 5000, balance: 7230, description: 'Loaned', date: 'date', type: 'CREDIT' }
+    { id: '333ccc', walletId, amount: -250, balance: 2250, description: 'Film tickets', date: 'date', type: 'DEBIT' },
+    { id: '444ccc', walletId, amount: -20, balance: 2230, description: 'Tea', date: 'date', type: 'DEBIT' },
+    { id: '555ccc', walletId, amount: 5000, balance: 7230, description: 'Loaned', date: 'date', type: 'CREDIT' },
+    { ...addedTransaction }
   ]
   before(() => {
-    mockGetWallet = sinon.stub(walletService, 'getWallet')
-    mockGetWallet.resolves(getWalletData)
     mockCreateWallet = sinon.stub(walletService, 'setupWallet')
-    mockCreateWallet.resolves({ id: walletId, ...createWalletBody })
+    mockCreateWallet.resolves({ ...getWalletData })
+    mockGetWallet = sinon.stub(walletService, 'getWallet')
+    mockGetWallet.resolves({ ...getWalletData })
     mockAddTransaction = sinon.stub(walletService, 'transact')
-    mockAddTransaction.resolves({ id: transactionId, ...addTransactionBody })
+    mockAddTransaction.resolves({ ...addedTransaction })
     mockGetTransactions = sinon.stub(walletService, 'getTransactions')
     mockGetTransactions.resolves(getTransactionsResponse)
   })
@@ -33,14 +35,6 @@ describe('/api/wallets', () => {
     mockAddTransaction.restore()
     mockGetTransactions.restore()
   })
-  describe('GET /:id', () => {
-    it('Should get the wallet information matching to the given ID', (done) => {
-      request(app)
-        .get(`/api/wallets/${walletId}`)
-        .expect(200)
-        .expect(getWalletData, done)
-    })
-  })
 
   describe('POST /setup', () => {
     it('Should setup a new wallet with given name and balance', (done) => {
@@ -48,7 +42,16 @@ describe('/api/wallets', () => {
         .post('/api/wallets/setup')
         .send(createWalletBody)
         .expect(200)
-        .expect({ id: walletId, ...createWalletBody }, done)
+        .expect({ ...getWalletData }, done)
+    })
+  })
+
+  describe('GET /:id', () => {
+    it('Should get the wallet information matching to the given ID', (done) => {
+      request(app)
+        .get(`/api/wallets/wallet/${walletId}`)
+        .expect(200)
+        .expect({ ...getWalletData }, done)
     })
   })
 
@@ -58,7 +61,7 @@ describe('/api/wallets', () => {
         .post(`/api/wallets/transact/${walletId}`)
         .send(addTransactionBody)
         .expect(200)
-        .expect({ id: transactionId, ...addTransactionBody }, done)
+        .expect({ ...addedTransaction }, done)
     })
   })
 
